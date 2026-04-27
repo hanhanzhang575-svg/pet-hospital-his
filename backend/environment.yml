@@ -1,0 +1,19 @@
+name: shironosuke-pet-hospital
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - python=3.11
+  - fastapi
+  - sqlalchemy
+  - uvicorn
+  - python-jose
+  - passlib
+  - apscheduler
+  - networkx
+  - httpx
+  - pip
+  - pip:
+      - python-multipart
+      - chromadb
+

@@ -1,0 +1,148 @@
+@startuml
+title 白之助宠物医院信息系统 - ORM类图
+
+skinparam classAttributeIconSize 0
+hide methods
+
+class Role {
+  +id: int
+  +name: str
+  +description: str
+}
+
+class User {
+  +id: int
+  +employee_code: str
+  +username: str
+  +role_id: int
+}
+
+class Owner {
+  +id: int
+  +owner_code: str
+  +name: str
+}
+
+class Pet {
+  +id: int
+  +pet_code: str
+  +owner_id: int
+  +clinic_id: str
+}
+
+class Appointment {
+  +id: int
+  +record_code: str
+  +pet_id: int
+  +doctor_id: int
+  +status: str
+  +priority_score: float
+}
+
+class MedicalRecord {
+  +id: int
+  +record_no: str
+  +appointment_id: int
+  +pet_id: int
+  +vet_id: int
+}
+
+class Diagnosis {
+  +id: int
+  +medical_record_id: int
+  +diagnosis_name: str
+}
+
+class CageUnit {
+  +id: int
+  +cage_code: str
+  +clinic_id: str
+  +zone_type: str
+  +status: str
+  +current_pet_id: int
+}
+
+class InpatientRecord {
+  +id: int
+  +pet_id: int
+  +cage_id: int
+  +doctor_id: int
+  +status: str
+}
+
+class NursingLog {
+  +id: int
+  +inpatient_record_id: int
+  +nurse_id: int
+}
+
+class Drug {
+  +id: int
+  +drug_code: str
+  +name: str
+}
+
+class DrugInventory {
+  +id: int
+  +drug_id: int
+  +branch_code: str
+  +stock_qty: float
+}
+
+class Prescription {
+  +id: int
+  +prescription_code: str
+  +medical_record_id: int
+  +doctor_id: int
+}
+
+class PrescriptionItem {
+  +id: int
+  +prescription_id: int
+  +drug_id: int
+  +quantity: float
+}
+
+class Invoice {
+  +id: int
+  +invoice_no: str
+  +owner_id: int
+}
+
+class InvoiceItem {
+  +id: int
+  +invoice_id: int
+  +item_name: str
+  +amount: float
+}
+
+class AiDecisionAuditLog {
+  +id: int
+  +medical_record_id: int
+  +doctor_id: int
+  +correlation_score: float
+}
+
+Role "1" <-- "many" User : role_id
+Owner "1" <-- "many" Pet : owner_id
+Pet "1" <-- "many" Appointment : pet_id
+User "1" <-- "many" Appointment : doctor_id
+Appointment "1" <-- "many" MedicalRecord : appointment_id
+MedicalRecord "1" <-- "many" Diagnosis : medical_record_id
+Pet "1" <-- "many" InpatientRecord : pet_id
+CageUnit "1" <-- "many" InpatientRecord : cage_id
+User "1" <-- "many" InpatientRecord : doctor_id
+InpatientRecord "1" <-- "many" NursingLog : inpatient_record_id
+User "1" <-- "many" NursingLog : nurse_id
+Drug "1" <-- "many" DrugInventory : drug_id
+MedicalRecord "1" <-- "many" Prescription : medical_record_id
+User "1" <-- "many" Prescription : doctor_id
+Prescription "1" <-- "many" PrescriptionItem : prescription_id
+Drug "1" <-- "many" PrescriptionItem : drug_id
+Owner "1" <-- "many" Invoice : owner_id
+Invoice "1" <-- "many" InvoiceItem : invoice_id
+MedicalRecord "1" <-- "many" AiDecisionAuditLog : medical_record_id
+User "1" <-- "many" AiDecisionAuditLog : doctor_id
+
+@enduml
+

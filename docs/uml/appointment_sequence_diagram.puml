@@ -1,0 +1,31 @@
+@startuml
+title 门诊挂号API调用链时序图
+
+actor Frontend as FE
+participant "Appointments Router\n/api/v1/appointments" as Router
+participant "Appointment Service\ncreate_appointment" as Service
+participant "Queue Priority Service\ncalculate_priority_score" as Priority
+database "SQLite(DB)" as DB
+
+FE -> Router : POST /api/v1/appointments\nAppointmentCreate
+Router -> Service : create_appointment(db,payload)
+Service -> DB : 查询Pet(pet_id)
+DB --> Service : pet
+Service -> DB : 查询User(doctor_id,is_active)
+DB --> Service : doctor
+Service -> Priority : calculate_priority_score(urgency,waiting,age)
+Priority --> Service : priority_score
+Service -> Service : 生成record_code(YYYYMMDD+SUA+流水)
+Service -> DB : INSERT appointments\n(doctor_id,scheduled_time,...)
+alt 时间槽冲突(唯一约束)
+  DB --> Service : IntegrityError
+  Service --> Router : ApiError(409)
+  Router --> FE : {code:409,message:"该医生当前时段号源已被占用"}
+else 创建成功
+  DB --> Service : appointment
+  Service --> Router : Appointment
+  Router --> FE : {code:201,message:"success",data:AppointmentRead}
+end
+
+@enduml
+
