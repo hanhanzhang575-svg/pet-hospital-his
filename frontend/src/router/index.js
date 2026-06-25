@@ -42,6 +42,12 @@ const OwnerCenterView = () => import("../views/OwnerCenterView.vue");
 const routes = [
   { path: "/", redirect: "/login" },
   { path: "/login", name: "login", component: LoginView, meta: { title: "登录", public: true } },
+  {
+    path: "/20231111085-管信2301张默涵",
+    name: "project-entry",
+    component: LoginView,
+    meta: { title: "宠物医院信息系统 | 管信2301 张默涵", public: true }
+  },
   { path: "/403", name: "forbidden", component: ForbiddenView, meta: { title: "无权限", public: true } },
   {
     path: "/home",
