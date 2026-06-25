@@ -64,6 +64,8 @@ export const useAuthStore = defineStore("auth", {
         window.sessionStorage.removeItem(ROLE_KEY);
         window.sessionStorage.removeItem(PROFILE_KEY);
         window.sessionStorage.removeItem(USER_ID_KEY);
+        window.sessionStorage.removeItem("static_demo");
+        window.sessionStorage.removeItem("static_demo_role");
         this.demoRole = "";
         this.profile = null;
       }

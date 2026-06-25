@@ -126,6 +126,10 @@ function startHeartbeat() {
 }
 
 async function connect() {
+  if (window.sessionStorage.getItem("static_demo") === "1" || import.meta.env.VITE_STATIC_DEMO === "1") {
+    connectionState.value = "disconnected";
+    return;
+  }
   if (socket && (socket.readyState === WebSocket.OPEN || socket.readyState === WebSocket.CONNECTING)) return;
   let userId = await resolveUserId();
   if (!userId) {
@@ -136,6 +140,7 @@ async function connect() {
   manualClosed = false;
   connectionState.value = connected.value ? "connected" : "reconnecting";
   const url = buildWsUrl(`/ws/${userId}`);
+  if (!url) return;
   socket = new WebSocket(url);
   socket.onopen = () => {
     reconnectAttempts = 0;

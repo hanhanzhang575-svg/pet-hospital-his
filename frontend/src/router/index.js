@@ -1,44 +1,43 @@
-import { createRouter, createWebHistory } from "vue-router";
+import { createRouter, createWebHashHistory, createWebHistory } from "vue-router";
 import { useAuthStore } from "../store";
 
-import ArchiveView from "../views/ArchiveView.vue";
-import AppointmentsView from "../views/AppointmentsView.vue";
-import ForbiddenView from "../views/ForbiddenView.vue";
-import InpatientView from "../views/InpatientView.vue";
-import InventoryView from "../views/InventoryView.vue";
-import LoginView from "../views/LoginView.vue";
-import PharmacyView from "../views/PharmacyView.vue";
-import RfmBoardView from "../views/RfmBoardView.vue";
-import VetWorkbenchView from "../views/VetWorkbenchView.vue";
-import BillingSettlementView from "../views/BillingSettlementView.vue";
-import FollowupTasksView from "../views/FollowupTasksView.vue";
-import PrescriptionCreateView from "../views/PrescriptionCreateView.vue";
-import InpatientApplyView from "../views/InpatientApplyView.vue";
-import AIDiagnosisView from "../views/AIDiagnosisView.vue";
-import DoctorConsultationView from "../views/DoctorConsultationView.vue";
-import MedicalRecordDetailView from "../views/MedicalRecordDetailView.vue";
-import NursingLogsView from "../views/NursingLogsView.vue";
-import VitalsEntryView from "../views/VitalsEntryView.vue";
-import ScheduleManagementView from "../views/ScheduleManagementView.vue";
-import EoqVisualView from "../views/EoqVisualView.vue";
-import EoqSuggestionView from "../views/EoqSuggestion.vue";
-import CrossClinicRecordsView from "../views/CrossClinicRecordsView.vue";
-import CageStatusView from "../views/CageStatusView.vue";
-import PurchaseRequestsView from "../views/PurchaseRequestsView.vue";
-import OpsBoardView from "../views/OpsBoardView.vue";
-import PurchaseApprovalsView from "../views/PurchaseApprovalsView.vue";
-import FinanceLedgerView from "../views/FinanceLedgerView.vue";
-import CrossClinicDispatchView from "../views/CrossClinicDispatchView.vue";
-import UserManagementView from "../views/UserManagementView.vue";
-import PermissionConfigView from "../views/PermissionConfigView.vue";
-import AuditLogsView from "../views/AuditLogsView.vue";
-import FederatedLearning from "../views/FederatedLearning.vue";
-import LabDashboardView from "../views/LabDashboardView.vue";
-import LabTestsView from "../views/LabTestsView.vue";
-import LabResultsView from "../views/LabResultsView.vue";
-import DataCenterView from "../views/DataCenterView.vue";
-import AdoptionHallView from "../views/AdoptionHallView.vue";
-import OwnerCenterView from "../views/OwnerCenterView.vue";
+const ArchiveView = () => import("../views/ArchiveView.vue");
+const AppointmentsView = () => import("../views/AppointmentsView.vue");
+const ForbiddenView = () => import("../views/ForbiddenView.vue");
+const InpatientView = () => import("../views/InpatientView.vue");
+const InventoryView = () => import("../views/InventoryView.vue");
+const LoginView = () => import("../views/LoginView.vue");
+const PharmacyView = () => import("../views/PharmacyView.vue");
+const RfmBoardView = () => import("../views/RfmBoardView.vue");
+const VetWorkbenchView = () => import("../views/VetWorkbenchView.vue");
+const BillingSettlementView = () => import("../views/BillingSettlementView.vue");
+const FollowupTasksView = () => import("../views/FollowupTasksView.vue");
+const PrescriptionCreateView = () => import("../views/PrescriptionCreateView.vue");
+const InpatientApplyView = () => import("../views/InpatientApplyView.vue");
+const AIDiagnosisView = () => import("../views/AIDiagnosisView.vue");
+const DoctorConsultationView = () => import("../views/DoctorConsultationView.vue");
+const MedicalRecordDetailView = () => import("../views/MedicalRecordDetailView.vue");
+const NursingLogsView = () => import("../views/NursingLogsView.vue");
+const VitalsEntryView = () => import("../views/VitalsEntryView.vue");
+const ScheduleManagementView = () => import("../views/ScheduleManagementView.vue");
+const EoqVisualView = () => import("../views/EoqVisualView.vue");
+const CrossClinicRecordsView = () => import("../views/CrossClinicRecordsView.vue");
+const CageStatusView = () => import("../views/CageStatusView.vue");
+const PurchaseRequestsView = () => import("../views/PurchaseRequestsView.vue");
+const OpsBoardView = () => import("../views/OpsBoardView.vue");
+const PurchaseApprovalsView = () => import("../views/PurchaseApprovalsView.vue");
+const FinanceLedgerView = () => import("../views/FinanceLedgerView.vue");
+const CrossClinicDispatchView = () => import("../views/CrossClinicDispatchView.vue");
+const UserManagementView = () => import("../views/UserManagementView.vue");
+const PermissionConfigView = () => import("../views/PermissionConfigView.vue");
+const AuditLogsView = () => import("../views/AuditLogsView.vue");
+const FederatedLearning = () => import("../views/FederatedLearning.vue");
+const LabDashboardView = () => import("../views/LabDashboardView.vue");
+const LabTestsView = () => import("../views/LabTestsView.vue");
+const LabResultsView = () => import("../views/LabResultsView.vue");
+const DataCenterView = () => import("../views/DataCenterView.vue");
+const AdoptionHallView = () => import("../views/AdoptionHallView.vue");
+const OwnerCenterView = () => import("../views/OwnerCenterView.vue");
 
 const routes = [
   { path: "/", redirect: "/login" },
@@ -54,12 +53,12 @@ const routes = [
   { path: "/lab-tests", name: "lab-tests", component: LabTestsView, meta: { title: "待检队列", roles: ["lab_tech"] } },
   { path: "/lab-results", name: "lab-results", component: LabResultsView, meta: { title: "报告库", roles: ["lab_tech"] } },
 
-  { path: "/appointments", name: "appointments", component: AppointmentsView, meta: { title: "挂号管理", roles: ["receptionist", "doctor"] } },
-  { path: "/archives", name: "archives", component: ArchiveView, meta: { title: "客户档案", roles: ["receptionist", "doctor"] } },
+  { path: "/appointments", name: "appointments", component: AppointmentsView, meta: { title: "挂号管理", roles: ["receptionist"] } },
+  { path: "/archives", name: "archives", component: ArchiveView, meta: { title: "客户档案", roles: ["receptionist"] } },
   { path: "/billing-settlement", name: "billing-settlement", component: BillingSettlementView, meta: { title: "收费结算", roles: ["receptionist"] } },
   { path: "/followup-tasks", name: "followup-tasks", component: FollowupTasksView, meta: { title: "回访任务", roles: ["receptionist"] } },
-  { path: "/owner-center", name: "owner-center", component: OwnerCenterView, meta: { title: "主人运营", roles: ["receptionist", "manager"] } },
-  { path: "/adoption-hall", name: "adoption-hall", component: AdoptionHallView, meta: { title: "领养匹配", roles: ["receptionist", "manager"] } },
+  { path: "/owner-center", name: "owner-center", component: OwnerCenterView, meta: { title: "主人运营", roles: ["manager"] } },
+  { path: "/adoption-hall", name: "adoption-hall", component: AdoptionHallView, meta: { title: "领养匹配", roles: ["manager"] } },
 
   { path: "/vet-workbench", name: "vet-workbench", component: VetWorkbenchView, meta: { title: "医生工作台", roles: ["doctor"] } },
   { path: "/medical-records", name: "medical-records", component: CrossClinicRecordsView, meta: { title: "电子病历", roles: ["doctor"] } },
@@ -69,15 +68,15 @@ const routes = [
   { path: "/ai-diagnosis", name: "ai-diagnosis", component: AIDiagnosisView, meta: { title: "AI 辅助诊断", roles: ["doctor"] } },
   { path: "/doctor-consultation", name: "doctor-consultation", component: DoctorConsultationView, meta: { title: "接诊工作区", roles: ["doctor"] } },
 
-  { path: "/inpatient", name: "inpatient", component: InpatientView, meta: { title: "住院管理", roles: ["nurse", "doctor"] } },
-  { path: "/cage-status", name: "cage-status", component: CageStatusView, meta: { title: "笼舍状态", roles: ["nurse", "manager"] } },
+  { path: "/inpatient", name: "inpatient", component: InpatientView, meta: { title: "住院管理", roles: ["nurse"] } },
+  { path: "/cage-status", name: "cage-status", component: CageStatusView, meta: { title: "笼舍状态", roles: ["nurse"] } },
   { path: "/nursing-logs", name: "nursing-logs", component: NursingLogsView, meta: { title: "护理日志", roles: ["nurse"] } },
   { path: "/vitals-entry", name: "vitals-entry", component: VitalsEntryView, meta: { title: "体征录入", roles: ["nurse"] } },
 
   { path: "/pharmacy", name: "pharmacy", component: PharmacyView, meta: { title: "药房发药", roles: ["pharmacist", "pharmacy"] } },
-  { path: "/inventory", name: "inventory", component: InventoryView, meta: { title: "库存管理", roles: ["pharmacist", "pharmacy", "manager"] } },
-  { path: "/inventory-eoq", name: "inventory-eoq", component: EoqVisualView, meta: { title: "EOQ 补货建议", roles: ["pharmacist", "pharmacy", "manager"] } },
-  { path: "/pharmacy-eoq-suggestions", name: "pharmacy-eoq-suggestions", component: EoqSuggestionView, meta: { title: "药房 EOQ 策略", roles: ["pharmacist", "pharmacy", "manager"] } },
+  { path: "/inventory", name: "inventory", component: InventoryView, meta: { title: "库存管理", roles: ["pharmacist", "pharmacy"] } },
+  { path: "/inventory-eoq", name: "inventory-eoq", component: EoqVisualView, meta: { title: "EOQ 补货建议", roles: ["pharmacist", "pharmacy"] } },
+  { path: "/pharmacy-eoq-suggestions", redirect: "/inventory-eoq", meta: { title: "EOQ 补货建议", roles: ["pharmacist", "pharmacy"] } },
   { path: "/purchase-requests", name: "purchase-requests", component: PurchaseRequestsView, meta: { title: "采购申请", roles: ["pharmacist", "pharmacy"] } },
 
   { path: "/ops-board", name: "ops-board", component: OpsBoardView, meta: { title: "运营看板", roles: ["manager"] } },
@@ -86,8 +85,8 @@ const routes = [
   {
     path: "/admin/schedule-manage",
     name: "admin-schedule-manage",
-    component: () => import("../views/admin/ScheduleManage.vue"),
-    meta: { title: "医生护士排班", roles: ["admin", "manager"] }
+    redirect: "/schedule-management",
+    meta: { title: "排班管理", roles: ["manager"] }
   },
   { path: "/schedule-management", name: "schedule-management", component: ScheduleManagementView, meta: { title: "排班管理", roles: ["manager"] } },
   { path: "/finance-ledger", name: "finance-ledger", component: FinanceLedgerView, meta: { title: "财务台账", roles: ["manager"] } },
@@ -100,8 +99,12 @@ const routes = [
   { path: "/data-center", name: "data-center", component: DataCenterView, meta: { title: "数据中心", roles: ["admin"] } }
 ];
 
+const routerBase = import.meta.env.BASE_URL && import.meta.env.BASE_URL !== "./" ? import.meta.env.BASE_URL : "/";
+const routerHistory =
+  import.meta.env.VITE_ROUTER_MODE === "hash" ? createWebHashHistory(routerBase) : createWebHistory(routerBase);
+
 const router = createRouter({
-  history: createWebHistory(),
+  history: routerHistory,
   routes
 });
 

@@ -254,16 +254,17 @@ function markAllRead() {
 function resolveMessageRoute(item) {
   const title = String(item?.title || "");
   const mapping = [
-    { keys: ["新患者", "排班变动", "体征异常", "AI预警"], route: "/vet-workbench", roles: ["doctor", "admin", "manager"] },
-    { keys: ["新处方"], route: "/pharmacy", roles: ["pharmacist", "pharmacy", "admin", "manager"] },
-    { keys: ["新护理任务", "欠费预警"], route: "/inpatient", roles: ["nurse", "manager", "admin"] },
-    { keys: ["库存预警"], route: "/inventory", roles: ["manager", "admin", "pharmacist", "pharmacy"] },
+    { keys: ["新患者", "排班变动", "体征异常", "AI预警"], route: "/vet-workbench", roles: ["doctor"] },
+    { keys: ["新处方"], route: "/pharmacy", roles: ["pharmacist", "pharmacy"] },
+    { keys: ["新护理任务"], route: "/inpatient", roles: ["nurse"] },
+    { keys: ["欠费预警"], route: "/finance-ledger", roles: ["manager"] },
+    { keys: ["库存预警"], route: "/purchase-approvals", roles: ["manager"] },
+    { keys: ["库存预警"], route: "/inventory", roles: ["pharmacist", "pharmacy"] },
     { keys: ["处方失效提醒"], route: "/billing-settlement", roles: ["receptionist"] },
-    { keys: ["结算完成"], route: "/finance-ledger", roles: ["manager", "admin"] }
+    { keys: ["结算完成"], route: "/finance-ledger", roles: ["manager"] }
   ];
-  const target = mapping.find((x) => x.keys.some((k) => title.includes(k)));
+  const target = mapping.find((x) => x.keys.some((k) => title.includes(k)) && authStore.hasRole(x.roles));
   if (!target) return "";
-  if (!authStore.hasRole(target.roles)) return "";
   return target.route;
 }
 
@@ -313,7 +314,8 @@ onMounted(async () => {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
-  background-color: #fdfdfd;
+  background:
+    linear-gradient(180deg, #f8fafc 0%, #eef6f5 46%, #f6f8fb 100%);
   position: relative;
 }
 
@@ -327,19 +329,23 @@ onMounted(async () => {
 .bg-watermark {
   position: fixed;
   inset: 0;
-  background: linear-gradient(135deg, rgba(66, 185, 131, 0.02) 0%, rgba(66, 185, 131, 0.05) 100%);
+  background:
+    linear-gradient(120deg, rgba(16, 185, 129, 0.06), rgba(59, 130, 246, 0.035) 46%, rgba(245, 158, 11, 0.035)),
+    repeating-linear-gradient(135deg, rgba(15, 23, 42, 0.018) 0 1px, transparent 1px 18px);
   pointer-events: none;
   z-index: 0;
 }
 
 .header {
-  background-color: rgba(255, 255, 255, 0.85);
-  backdrop-filter: blur(10px);
-  border-bottom: 1px solid #e0e0e0;
+  height: 60px;
+  background-color: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(16px);
+  border-bottom: 1px solid rgba(203, 213, 225, 0.72);
+  box-shadow: 0 14px 34px -30px rgba(15, 23, 42, 0.55);
   padding: 0 20px;
   display: flex;
   align-items: center;
-  z-index: 2;
+  z-index: 8;
 }
 
 .header-content {
@@ -359,17 +365,26 @@ onMounted(async () => {
 
 .logo {
   margin: 0;
-  font-size: 24px;
-  font-weight: bold;
-  color: #42b983;
+  font-size: 20px;
+  line-height: 1;
+  font-weight: 800;
+  color: #0f766e;
+  letter-spacing: 0;
   white-space: nowrap;
 }
 
-.body { display: flex; min-height: calc(100vh - 60px); position: relative; z-index: 1; }
+.body {
+  display: flex;
+  min-height: calc(100vh - 60px);
+  position: relative;
+  z-index: 1;
+}
 
 .main-content {
   flex: 1;
-  padding: 20px;
+  padding: 16px;
+  min-width: 0;
+  max-width: calc(100vw - 236px);
 }
 
 .global-error-banner {
@@ -379,8 +394,11 @@ onMounted(async () => {
 
 .ws-micro-indicator {
   margin-left: 10px;
-  width: 20px;
-  height: 20px;
+  width: 24px;
+  height: 24px;
+  border-radius: 999px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -411,9 +429,14 @@ onMounted(async () => {
   }
 }
 
-.msg-list { display: grid; gap: 8px; }
-.msg-item { border-bottom: 1px dashed #e5e7eb; padding-bottom: 8px; }
-.msg-title { font-size: 13px; }
+.msg-list { display: grid; gap: 8px; max-height: 360px; overflow-y: auto; padding-right: 6px; }
+.msg-item {
+  border: 1px solid #edf2f7;
+  background: #fbfdff;
+  border-radius: 8px;
+  padding: 10px;
+}
+.msg-title { font-size: 13px; font-weight: 700; color: #1e293b; }
 .msg-level-icon { margin-right: 6px; }
 .msg-content { font-size: 12px; color: #606266; margin-top: 4px; }
 .msg-actions { display: flex; align-items: center; justify-content: space-between; margin-top: 4px; }
@@ -431,17 +454,87 @@ onMounted(async () => {
   bottom: 82px;
   z-index: 3100;
   border-radius: 999px;
+  box-shadow: 0 16px 36px -24px rgba(15, 23, 42, 0.58);
 }
 .manual-header h2 {
   margin: 0;
 }
-.help-fab { box-shadow: 0 8px 24px rgba(0,0,0,0.18); }
+.help-fab {
+  box-shadow: 0 16px 36px -24px rgba(15, 23, 42, 0.58);
+}
 .help-title { font-weight: 700; margin-bottom: 8px; }
 .help-list { margin: 0 0 8px 16px; padding: 0; }
 
+.manual-dialog :deep(.el-dialog__body) {
+  max-height: calc(100vh - 96px);
+  overflow: auto;
+}
+
+.manual-dialog :deep(.el-table__body-wrapper) {
+  max-height: 420px;
+  overflow-y: auto;
+}
+
 :deep(.el-card) {
-  background: rgba(255, 255, 255, 0.85);
-  backdrop-filter: blur(10px);
+  background: rgba(255, 255, 255, 0.94);
+}
+
+@media (max-width: 900px) {
+  .body {
+    flex-direction: column;
+  }
+
+  .main-content {
+    max-width: 100vw;
+    padding: 12px;
+  }
+
+  .manual-fab {
+    right: 16px;
+    bottom: 76px;
+  }
+
+  .help-fab-wrap {
+    right: 16px;
+    bottom: 18px;
+  }
+}
+
+@media (max-width: 640px) {
+  .header {
+    padding: 0 12px;
+  }
+
+  .header-content {
+    gap: 8px;
+  }
+
+  .logo {
+    flex: 1 1 auto;
+    min-width: 0;
+    font-size: 16px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .header-center {
+    display: none;
+  }
+
+  .header-content :deep(.el-space) {
+    flex: 0 0 auto;
+    gap: 6px !important;
+  }
+
+  .header-content :deep(.el-tag) {
+    max-width: 72px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .header-content :deep(.el-button) {
+    padding: 6px 8px;
+  }
 }
 </style>
 
