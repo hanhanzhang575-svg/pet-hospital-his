@@ -1,5 +1,6 @@
 import { createRouter, createWebHashHistory, createWebHistory } from "vue-router";
 import { useAuthStore } from "../store";
+import { getStaticDemoUser, isStaticDemoEnabled } from "../api/staticDemo";
 
 const ArchiveView = () => import("../views/ArchiveView.vue");
 const AppointmentsView = () => import("../views/AppointmentsView.vue");
@@ -39,11 +40,13 @@ const DataCenterView = () => import("../views/DataCenterView.vue");
 const AdoptionHallView = () => import("../views/AdoptionHallView.vue");
 const OwnerCenterView = () => import("../views/OwnerCenterView.vue");
 
+const PROJECT_ENTRY_PATH = "/20231111085-管信2301张默涵";
+
 const routes = [
   { path: "/", redirect: "/login" },
   { path: "/login", name: "login", component: LoginView, meta: { title: "登录", public: true } },
   {
-    path: "/20231111085-管信2301张默涵",
+    path: PROJECT_ENTRY_PATH,
     name: "project-entry",
     component: LoginView,
     meta: { title: "宠物医院信息系统 | 管信2301 张默涵", public: true }
@@ -102,7 +105,8 @@ const routes = [
   { path: "/permission-config", name: "permission-config", component: PermissionConfigView, meta: { title: "权限配置", roles: ["admin"] } },
   { path: "/audit-logs", name: "audit-logs", component: AuditLogsView, meta: { title: "审计日志", roles: ["admin"] } },
   { path: "/federated-status", name: "federated-status", component: FederatedLearning, meta: { title: "联邦学习状态", roles: ["admin"] } },
-  { path: "/data-center", name: "data-center", component: DataCenterView, meta: { title: "数据中心", roles: ["admin"] } }
+  { path: "/data-center", name: "data-center", component: DataCenterView, meta: { title: "数据中心", roles: ["admin"] } },
+  { path: "/:pathMatch(.*)*", redirect: PROJECT_ENTRY_PATH }
 ];
 
 const routerBase = import.meta.env.BASE_URL && import.meta.env.BASE_URL !== "./" ? import.meta.env.BASE_URL : "/";
@@ -116,7 +120,22 @@ const router = createRouter({
 
 router.beforeEach(async (to, _from, next) => {
   const authStore = useAuthStore();
+  if (isStaticDemoEnabled() && to.path === "/403") {
+    next(PROJECT_ENTRY_PATH);
+    return;
+  }
+
   if (to.meta?.public) {
+    next();
+    return;
+  }
+
+  const requiredRoles = to.meta?.roles || [];
+  if (isStaticDemoEnabled() && requiredRoles.length > 0) {
+    const preferredRole = normalizeDemoRole(requiredRoles[0]);
+    if (!authStore.isLoggedIn || !authStore.hasRole(requiredRoles)) {
+      activateStaticDemoRole(authStore, preferredRole);
+    }
     next();
     return;
   }
@@ -129,7 +148,6 @@ router.beforeEach(async (to, _from, next) => {
     }
   }
 
-  const requiredRoles = to.meta?.roles || [];
   if (requiredRoles.length === 0) {
     next();
     return;
@@ -149,3 +167,16 @@ router.beforeEach(async (to, _from, next) => {
 });
 
 export default router;
+
+function normalizeDemoRole(role) {
+  return role === "pharmacy" ? "pharmacist" : role || "doctor";
+}
+
+function activateStaticDemoRole(authStore, role) {
+  const user = getStaticDemoUser(normalizeDemoRole(role));
+  window.sessionStorage.setItem("static_demo", "1");
+  window.sessionStorage.setItem("static_demo_role", user.role);
+  authStore.setToken(`static-demo-token-${user.role}`);
+  authStore.setDemoRole(user.role);
+  authStore.setProfile(user);
+}
