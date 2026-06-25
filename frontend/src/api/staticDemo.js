@@ -117,6 +117,102 @@ const users = {
   admin: { id: 701, username: "admin", role: "admin", full_name: "系统管理员", clinic_id: "C001" }
 };
 
+const ownerRows = [
+  { id: 1, name: "张女士", phone: "13800000001", level: "VIP", address: "沙河口区", created_at: `${today}T08:30:00` },
+  { id: 2, name: "陈先生", phone: "13800000002", level: "普通", address: "甘井子区", created_at: `${today}T09:10:00` },
+  { id: 3, name: "林同学", phone: "13800000003", level: "复诊", address: "高新园区", created_at: `${today}T10:20:00` }
+];
+
+const petRows = [
+  { id: 1, owner_id: 1, owner_name: "张女士", name: "奶糖", species: "猫", breed: "英短", gender: "雌", age: 3, weight: 4.2 },
+  { id: 2, owner_id: 2, owner_name: "陈先生", name: "可乐", species: "犬", breed: "柯基", gender: "雄", age: 4, weight: 12.5 },
+  { id: 3, owner_id: 3, owner_name: "林同学", name: "团子", species: "猫", breed: "布偶", gender: "雄", age: 2, weight: 5.1 },
+  { id: 4, owner_id: 1, owner_name: "张女士", name: "栗子", species: "犬", breed: "柴犬", gender: "雌", age: 5, weight: 9.4 },
+  { id: 5, owner_id: 2, owner_name: "陈先生", name: "芝士", species: "猫", breed: "橘猫", gender: "雄", age: 6, weight: 6.3 }
+];
+
+const medicalRecords = [
+  {
+    id: 1,
+    appointment_id: 1,
+    pet_id: 1,
+    pet_name: "奶糖",
+    doctor_id: 201,
+    doctor_name: "张医生",
+    chief_complaint: "食欲下降，轻微呕吐",
+    diagnosis: "疑似急性胃肠炎",
+    treatment_plan: "补液、止吐、少量多餐观察 48 小时",
+    status: "已完成",
+    created_at: `${today}T10:10:00`
+  },
+  {
+    id: 2,
+    appointment_id: 2,
+    pet_id: 2,
+    pet_name: "可乐",
+    doctor_id: 201,
+    doctor_name: "张医生",
+    chief_complaint: "皮肤瘙痒，局部脱毛",
+    diagnosis: "过敏性皮炎",
+    treatment_plan: "抗炎止痒，复查皮肤镜",
+    status: "就诊中",
+    created_at: `${today}T11:00:00`
+  }
+];
+
+const labOrders = [
+  { id: 1, appointment_id: 1, pet_name: "奶糖", test_type: "血常规", status: "待检", priority: "急诊", created_at: `${today}T09:40:00` },
+  { id: 2, appointment_id: 2, pet_name: "可乐", test_type: "皮肤刮片", status: "检查中", priority: "优先", created_at: `${today}T10:30:00` },
+  { id: 3, appointment_id: 3, pet_name: "团子", test_type: "生化检查", status: "已完成", priority: "常规", created_at: `${today}T11:30:00` }
+];
+
+const labResults = [
+  { id: 1, order_id: 3, pet_name: "团子", test_type: "生化检查", result_summary: "轻度脱水指标", status: "已出报告", abnormal_count: 1, created_at: `${today}T12:10:00` }
+];
+
+const nursingLogs = [
+  { id: 1, inpatient_record_id: 1, pet_name: "奶糖", temperature: 38.6, heart_rate: 128, respiration: 28, status: "正常", created_at: `${today}T12:30:00` },
+  { id: 2, inpatient_record_id: 3, pet_name: "芝士", temperature: 39.4, heart_rate: 142, respiration: 34, status: "异常", created_at: `${today}T13:10:00` }
+];
+
+const purchaseTasks = [
+  { id: 1, drug_name: "犬猫复合维生素", quantity: 30, status: "待审批", priority: "高", created_at: `${today}T09:00:00` },
+  { id: 2, drug_name: "伊曲康唑胶囊", quantity: 20, status: "已通过", priority: "中", created_at: `${today}T09:30:00` }
+];
+
+const rfmWarnings = [
+  { owner_id: 1, owner_name: "张女士", level: "高价值待回访", score: 92, suggestion: "建议安排术后复诊提醒" },
+  { owner_id: 2, owner_name: "陈先生", level: "疫苗提醒", score: 76, suggestion: "建议推送免疫加强通知" }
+];
+
+const scheduleStaff = Object.values(users).map((user) => ({
+  id: user.id,
+  name: user.full_name,
+  role: user.role,
+  clinic_id: user.clinic_id
+}));
+
+const scheduleAssignments = [
+  { id: 1, staff_id: 201, staff_name: "张医生", date: today, shift: "早班", room: "诊室 A" },
+  { id: 2, staff_id: 301, staff_name: "王佳", date: today, shift: "白班", room: "住院部" },
+  { id: 3, staff_id: 401, staff_name: "赵雪", date: today, shift: "白班", room: "药房" }
+];
+
+const adoptionPets = [
+  { id: 1, name: "豆包", species: "猫", age: 1, status: "待领养", match_score: 94 },
+  { id: 2, name: "小七", species: "犬", age: 2, status: "待领养", match_score: 88 }
+];
+
+const billingLedger = [
+  { id: 1, type: "诊疗", amount: 286, status: "已结算", pet_name: "奶糖", created_at: `${today}T10:50:00` },
+  { id: 2, type: "药品", amount: 168, status: "待缴费", pet_name: "可乐", created_at: `${today}T11:15:00` }
+];
+
+const newsRows = [
+  { id: 1, title: "白之助春季义诊周开放预约（疫苗+体检）", category: "院内通知", summary: "前台可直接创建义诊预约。", source_name: "白之助运营中心", published_at: "2026-04-10" },
+  { id: 2, title: "猫咪应激期 72 小时观察法", category: "养宠妙招", summary: "固定喂食、隐藏处和猫砂位置可降低应激。", source_name: "白之助猫科门诊", published_at: "2026-04-08" }
+];
+
 function success(data) {
   return { code: 200, message: "success", data };
 }
@@ -146,21 +242,93 @@ export function getStaticDemoResponse(config) {
   const method = String(config?.method || "get").toLowerCase();
   const path = getPath(config);
 
-  if (method !== "get" && method !== "post") return null;
+  if (!["get", "post", "put", "delete", "patch"].includes(method)) return success({ ok: true, static_demo: true });
 
   if (path === "/auth/me") return success(getStaticDemoUser());
   if (path === "/vet-workbench/queue") return success(appointments.filter((item) => item.status === "待诊"));
+  if (path === "/vet-workbench/medical-records") return success(medicalRecords);
+  if (path.startsWith("/vet-workbench/medical-record/")) return success(findById(medicalRecords, path) || medicalRecords[0]);
+  if (path.startsWith("/vet-workbench/pet-history/")) return success(medicalRecords);
+  if (path.startsWith("/vet-workbench/start/")) return success({ status: "就诊中", appointment: appointments[0] });
   if (path === "/appointments") return success(appointments);
+  if (path === "/appointments/schedule/week") return success(scheduleAssignments);
+  if (path === "/appointments/schedule/peak-prediction") return success({ peak_hours: ["09:00", "10:00", "15:00"], risk: "中" });
+  if (path === "/appointments/schedule/recommendations") return success(scheduleAssignments);
+  if (path.includes("/appointments/schedule/") && path.endsWith("/patients")) return success(appointments);
   if (path === "/tasks/followup") return success(followupTasks);
+  if (path === "/tasks/purchase") return success(purchaseTasks);
+  if (path === "/tasks/coordination/overview") return success({ referrals: 3, support_requests: 2, available_cages: 18 });
+  if (path === "/tasks/coordination/referrals") return success([{ id: 1, pet_name: "奶糖", from_clinic: "沙河院区", to_clinic: "高新园区", status: "协调中" }]);
+  if (path === "/tasks/coordination/available-cages") return success(cages.filter((item) => item.status === "空闲").slice(0, 8));
   if (path === "/inpatient-records") return success(inpatientRecords);
+  if (path.startsWith("/inpatient-records/") && path.endsWith("/nursing-logs")) return success(nursingLogs);
+  if (path.startsWith("/inpatient-records/")) return success(findById(inpatientRecords, path) || inpatientRecords[0]);
   if (path === "/cages") return success(cages);
   if (path === "/prescriptions") return success(prescriptions);
+  if (path.startsWith("/prescriptions/")) return success(findById(prescriptions, path) || prescriptions[0]);
   if (path === "/inventory/overview") return success(inventoryRows);
   if (path === "/inventory/expiry-warnings") return success([{ id: 1, name: "伊曲康唑胶囊", days_left: 18 }]);
+  if (path === "/inventory/eoq") return success(inventoryRows.map((item) => ({ ...item, recommended_qty: Math.max(0, item.safety_stock - item.stock_qty + 20) })));
+  if (path === "/pharmacy/eoq-suggestions") return success(inventoryRows.map((item) => ({ ...item, recommended_qty: Math.max(0, item.safety_stock - item.stock_qty + 20) })));
+  if (path.startsWith("/pharmacy/purchase-order")) return success({ ok: true, status: "已提交", static_demo: true });
   if (path === "/stats/weekly-visits") return success(weeklyVisits);
   if (path === "/stats/today-revenue") return success(todayRevenue);
   if (path === "/stats/conversion-funnel") return success(conversionFunnel);
+  if (path === "/stats/billing-ledger") return success(billingLedger);
+  if (path === "/owners") return success(ownerRows);
+  if (path.startsWith("/owners/")) return success(findById(ownerRows, path) || ownerRows[0]);
+  if (path === "/pets") return success(petRows);
+  if (path.startsWith("/pets/")) return success(findById(petRows, path) || petRows[0]);
+  if (path === "/users") return success(Object.values(users));
+  if (path === "/users/doctors") return success([users.doctor, { id: 202, username: "doctor2", role: "doctor", full_name: "李医生", clinic_id: "C001" }]);
+  if (path === "/users/lab-techs") return success([users.lab_tech]);
+  if (path === "/lab/pending-tests") return success(labOrders.filter((item) => item.status !== "已完成"));
+  if (path === "/lab/results") return success(labResults);
+  if (path === "/lab/stats") return success({ pending: 2, processing: 1, completed: 8, abnormal: 1 });
+  if (path.startsWith("/lab/start-exam/")) return success({ status: "检查中", static_demo: true });
+  if (path === "/nursing/vital-signs") return success({ ok: true, status: "已记录", static_demo: true });
+  if (path === "/ai/rfm-warning") return success(rfmWarnings);
+  if (path === "/ai/active-listener") return success({ active: true, status: "监听中" });
+  if (path === "/ai/knowledge/retrieve") return success([{ title: "犬猫胃肠炎处置建议", score: 0.92, source: "静态知识库" }]);
+  if (path === "/ai/full-diagnosis" || path === "/ai/multimodal-diagnosis") {
+    return success({ diagnosis: "静态演示诊断：建议结合体征与检验结果复核", confidence: 0.88, risk_level: "中" });
+  }
+  if (path === "/ai/graph/viz") return success({ nodes: [{ id: "pet", label: "宠物" }, { id: "symptom", label: "症状" }], edges: [{ source: "pet", target: "symptom" }] });
+  if (path === "/ai/graph/reasoning") return success({ conclusion: "静态演示推理完成", evidence: ["病史", "体征", "检验"] });
+  if (path === "/federated/status") return success({ status: "running", clients: 3, accuracy: 0.91, rounds: 12 });
+  if (path === "/scheduling/staff") return success(scheduleStaff);
+  if (path === "/scheduling/assignments") return success(scheduleAssignments);
+  if (path === "/scheduling/generate") return success(scheduleAssignments);
+  if (path === "/owner-center/1" || path.startsWith("/owner-center/")) {
+    return success({ owner: ownerRows[0], pets: petRows.filter((item) => item.owner_id === 1), visits: medicalRecords, rfm: rfmWarnings[0] });
+  }
+  if (path === "/adoption/pets") return success(adoptionPets);
+  if (path.startsWith("/adoption/match/")) return success({ matches: ownerRows, top_score: 94, status: "已匹配" });
+  if (path.startsWith("/adoption/dashboard/")) return success({ pet: adoptionPets[0], candidates: ownerRows, score: 94 });
+  if (path === "/adoption/algorithm") return success({ model: "静态匹配模型", status: "ready", precision: 0.89 });
+  if (path.startsWith("/adoption/match-status/")) return success({ status: "completed", progress: 100 });
+  if (path.startsWith("/adoption/persona/")) return success({ persona: "亲人、安静、适合家庭陪伴" });
+  if (path === "/data-center/tables") return success([{ name: "appointments", rows: appointments.length }, { name: "medical_records", rows: medicalRecords.length }]);
+  if (path.startsWith("/data-center/table/")) return success({ rows: appointments, total: appointments.length });
+  if (path.startsWith("/data-center/trace/medical-record/")) return success({ record: medicalRecords[0], pet: petRows[0], owner: ownerRows[0], timeline: medicalRecords });
+  if (path === "/news") return success(newsRows);
+  if (path.startsWith("/notifications/") || path === "/billing/settlement-complete") return success({ ok: true, static_demo: true });
 
-  if (method === "post") return success({ ok: true, static_demo: true });
-  return null;
+  if (method !== "get") return success({ ok: true, static_demo: true, status: "success" });
+  return success(getFallbackData(path));
+}
+
+function findById(items, path) {
+  const id = Number(String(path).match(/\/(\d+)(?:\/[^/]*)?$/)?.[1] || 0);
+  return items.find((item) => Number(item.id) === id);
+}
+
+function getFallbackData(path) {
+  if (path.includes("stats") || path.includes("status") || path.includes("overview") || path.includes("dashboard")) {
+    return { static_demo: true, status: "ready" };
+  }
+  if (/\/\d+(?:\/)?$/.test(path) || path.includes("/trace/")) {
+    return { id: 1, static_demo: true, title: "静态演示记录", status: "正常" };
+  }
+  return [];
 }

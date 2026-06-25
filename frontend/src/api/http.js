@@ -19,6 +19,19 @@ http.interceptors.request.use((config) => {
     config.headers = config.headers || {};
     config.headers.Authorization = `Bearer ${token}`;
   }
+  if (isStaticDemoEnabled()) {
+    const demoResponse = getStaticDemoResponse(config);
+    if (demoResponse) {
+      config.adapter = async () => ({
+        data: demoResponse,
+        status: 200,
+        statusText: "OK",
+        headers: {},
+        config,
+        request: null
+      });
+    }
+  }
   return config;
 });
 
