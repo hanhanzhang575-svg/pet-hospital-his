@@ -51,18 +51,27 @@ const appointments = [
   }
 ];
 
-const cages = Array.from({ length: 36 }, (_, idx) => ({
-  id: idx + 1,
-  code: `C001-${String(idx + 1).padStart(2, "0")}`,
-  clinic_id: "C001",
-  status: idx % 5 === 0 ? "清洁中" : idx % 3 === 0 ? "住院中" : "空闲",
-  zone_type: idx % 2 === 0 ? "犬区" : "猫区"
-}));
+const cages = Array.from({ length: 36 }, (_, idx) => {
+  const id = idx + 1;
+  const cageCode = `C001-${String(id).padStart(2, "0")}`;
+  const occupiedPetIds = [1, 2, 5];
+  const status = idx % 11 === 0 ? "维修" : idx % 5 === 0 ? "待清洁" : idx % 3 === 0 ? "住院中" : "空闲";
+  return {
+    id,
+    code: cageCode,
+    cage_code: cageCode,
+    clinic_id: "C001",
+    status,
+    zone_type: idx % 2 === 0 ? "犬区" : "猫区",
+    current_pet_id: status === "住院中" ? occupiedPetIds[idx % occupiedPetIds.length] : null,
+    adjacent_cage_ids: [id - 1, id + 1].filter((item) => item >= 1 && item <= 36)
+  };
+});
 
 const inpatientRecords = [
-  { id: 1, pet_id: 1, doctor_id: 2, pet_name: "奶糖", status: "住院中", deposit_amount: 1800, consumed_amount: 1420 },
-  { id: 2, pet_id: 2, doctor_id: 2, pet_name: "可乐", status: "待入院", deposit_amount: 1200, consumed_amount: 320 },
-  { id: 3, pet_id: 5, doctor_id: 3, pet_name: "芝士", status: "住院中", deposit_amount: 900, consumed_amount: 960 }
+  { id: 1, pet_id: 1, cage_id: 4, doctor_id: 201, pet_name: "奶糖", doctor_name: "张医生", status: "住院中", admission_time: `${today}T08:40:00`, deposit_amount: 1800, consumed_amount: 1420 },
+  { id: 2, pet_id: 2, cage_id: 7, doctor_id: 202, pet_name: "可乐", doctor_name: "李医生", status: "待入院", admission_time: `${today}T10:20:00`, deposit_amount: 1200, consumed_amount: 320 },
+  { id: 3, pet_id: 5, cage_id: 10, doctor_id: 203, pet_name: "芝士", doctor_name: "王医生", status: "住院中", admission_time: `${today}T11:30:00`, deposit_amount: 900, consumed_amount: 960 }
 ];
 
 const inventoryRows = [
@@ -185,17 +194,65 @@ const rfmWarnings = [
   { owner_id: 2, owner_name: "陈先生", level: "疫苗提醒", score: 76, suggestion: "建议推送免疫加强通知" }
 ];
 
-const scheduleStaff = Object.values(users).map((user) => ({
-  id: user.id,
-  name: user.full_name,
-  role: user.role,
-  clinic_id: user.clinic_id
-}));
+const scheduleDoctors = [
+  { id: 201, full_name: "张医生", doctor_name: "张医生", department: "综合门诊", avatar: "张" },
+  { id: 202, full_name: "李医生", doctor_name: "李医生", department: "皮肤科", avatar: "李" },
+  { id: 203, full_name: "王医生", doctor_name: "王医生", department: "外科", avatar: "王" }
+];
+
+const scheduleStaff = {
+  doctor: {
+    count: 3,
+    items: scheduleDoctors.map((doctor) => ({
+      employee_id: doctor.id,
+      employee_name: doctor.full_name,
+      role_name: "doctor",
+      clinic_id: "C001"
+    }))
+  },
+  nurse: {
+    count: 3,
+    items: [
+      { employee_id: 301, employee_name: "王佳", role_name: "nurse", clinic_id: "C001" },
+      { employee_id: 302, employee_name: "刘护士", role_name: "nurse", clinic_id: "C001" },
+      { employee_id: 303, employee_name: "陈护士", role_name: "nurse", clinic_id: "C001" }
+    ]
+  }
+};
+
+const scheduleSlots = [
+  { appointment_id: 9001, doctor_id: 201, date: today, period: "morning", booked_count: 8, max_capacity: 10, utilization_rate: 80, is_peak: true },
+  { appointment_id: 9002, doctor_id: 201, date: today, period: "afternoon", booked_count: 6, max_capacity: 10, utilization_rate: 60, is_peak: false },
+  { appointment_id: 9003, doctor_id: 202, date: today, period: "morning", booked_count: 10, max_capacity: 10, utilization_rate: 100, is_peak: true },
+  { appointment_id: 9004, doctor_id: 202, date: today, period: "afternoon", booked_count: 5, max_capacity: 10, utilization_rate: 50, is_peak: false },
+  { appointment_id: 9005, doctor_id: 203, date: today, period: "morning", booked_count: 7, max_capacity: 12, utilization_rate: 58.3, is_peak: false },
+  { appointment_id: 9006, doctor_id: 203, date: today, period: "afternoon", booked_count: 9, max_capacity: 12, utilization_rate: 75, is_peak: false }
+];
 
 const scheduleAssignments = [
-  { id: 1, staff_id: 201, staff_name: "张医生", date: today, shift: "早班", room: "诊室 A" },
-  { id: 2, staff_id: 301, staff_name: "王佳", date: today, shift: "白班", room: "住院部" },
-  { id: 3, staff_id: 401, staff_name: "赵雪", date: today, shift: "白班", room: "药房" }
+  { assignment_id: 1, employee_id: 201, employee_name: "张医生", role_name: "doctor", date: today, shift_id: "早班", clinic_id: "C001" },
+  { assignment_id: 2, employee_id: 202, employee_name: "李医生", role_name: "doctor", date: today, shift_id: "中班", clinic_id: "C001" },
+  { assignment_id: 3, employee_id: 301, employee_name: "王佳", role_name: "nurse", date: today, shift_id: "早班", clinic_id: "C001" },
+  { assignment_id: 4, employee_id: 302, employee_name: "刘护士", role_name: "nurse", date: today, shift_id: "晚班", clinic_id: "C001" }
+];
+
+const coordinationOverview = [
+  { clinic_id: "C001", clinic_name: "沙河院区", doctor_load: "高", cage_idle: 6, daily_completed_visits: 58, daily_surgeries: 3, inventory_risk: "中" },
+  { clinic_id: "C002", clinic_name: "甘井子院区", doctor_load: "中", cage_idle: 12, daily_completed_visits: 42, daily_surgeries: 2, inventory_risk: "低" },
+  { clinic_id: "C003", clinic_name: "高新园区", doctor_load: "低", cage_idle: 18, daily_completed_visits: 36, daily_surgeries: 1, inventory_risk: "低" }
+];
+
+const coordinationReferrals = [
+  {
+    id: 1,
+    pet_name: "奶糖",
+    from_clinic_name: "沙河院区",
+    to_clinic_name: "高新园区",
+    target_cage_code: "C001-08",
+    reason: "术后住院观察，目标院区笼舍余量更充足",
+    eta_time: `${today}T15:00:00`,
+    status: "待接收"
+  }
 ];
 
 const adoptionPets = [
@@ -251,14 +308,21 @@ export function getStaticDemoResponse(config) {
   if (path.startsWith("/vet-workbench/pet-history/")) return success(medicalRecords);
   if (path.startsWith("/vet-workbench/start/")) return success({ status: "就诊中", appointment: appointments[0] });
   if (path === "/appointments") return success(appointments);
-  if (path === "/appointments/schedule/week") return success(scheduleAssignments);
-  if (path === "/appointments/schedule/peak-prediction") return success({ peak_hours: ["09:00", "10:00", "15:00"], risk: "中" });
-  if (path === "/appointments/schedule/recommendations") return success(scheduleAssignments);
+  if (path === "/appointments/schedule/week") return success({ doctors: scheduleDoctors, slots: scheduleSlots });
+  if (path === "/appointments/schedule/peak-prediction") return success(scheduleSlots.filter((item) => item.is_peak).map((item) => ({ appointment_id: item.appointment_id })));
+  if (path === "/appointments/schedule/recommendations") {
+    return success({
+      recommendations: [
+        { priority: "high", doctor_name: "李医生", message: "上午号源已满，建议开放下午加号或转诊至高新园区。" },
+        { priority: "medium", doctor_name: "张医生", message: "沙河院区上午接近高峰，可安排护士提前完成分诊。" }
+      ]
+    });
+  }
   if (path.includes("/appointments/schedule/") && path.endsWith("/patients")) return success(appointments);
   if (path === "/tasks/followup") return success(followupTasks);
   if (path === "/tasks/purchase") return success(purchaseTasks);
-  if (path === "/tasks/coordination/overview") return success({ referrals: 3, support_requests: 2, available_cages: 18 });
-  if (path === "/tasks/coordination/referrals") return success([{ id: 1, pet_name: "奶糖", from_clinic: "沙河院区", to_clinic: "高新园区", status: "协调中" }]);
+  if (path === "/tasks/coordination/overview") return success(coordinationOverview);
+  if (path === "/tasks/coordination/referrals") return success(coordinationReferrals);
   if (path === "/tasks/coordination/available-cages") return success(cages.filter((item) => item.status === "空闲").slice(0, 8));
   if (path === "/inpatient-records") return success(inpatientRecords);
   if (path.startsWith("/inpatient-records/") && path.endsWith("/nursing-logs")) return success(nursingLogs);
@@ -297,8 +361,8 @@ export function getStaticDemoResponse(config) {
   if (path === "/ai/graph/reasoning") return success({ conclusion: "静态演示推理完成", evidence: ["病史", "体征", "检验"] });
   if (path === "/federated/status") return success({ status: "running", clients: 3, accuracy: 0.91, rounds: 12 });
   if (path === "/scheduling/staff") return success(scheduleStaff);
-  if (path === "/scheduling/assignments") return success(scheduleAssignments);
-  if (path === "/scheduling/generate") return success(scheduleAssignments);
+  if (path === "/scheduling/assignments") return { ...success(scheduleAssignments), meta: { staff: scheduleStaff } };
+  if (path === "/scheduling/generate") return { ...success({ assignments: scheduleAssignments, staff: scheduleStaff }), message: "静态演示排班已生成" };
   if (path === "/owner-center/1" || path.startsWith("/owner-center/")) {
     return success({ owner: ownerRows[0], pets: petRows.filter((item) => item.owner_id === 1), visits: medicalRecords, rfm: rfmWarnings[0] });
   }
