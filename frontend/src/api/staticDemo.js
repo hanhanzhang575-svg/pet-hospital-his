@@ -88,6 +88,7 @@ const petRows = petNames.map((name, index) => {
       : "垂耳兔";
   const owner = ownerRows[(index * 5) % ownerRows.length];
   const age = 1 + ((index * 3) % 12);
+  const allergy = pickByIndex(["无", "青霉素慎用", "海鲜蛋白敏感", "疫苗后低热"], index + 3);
   return {
     id: index + 1,
     owner_id: owner.id,
@@ -102,7 +103,7 @@ const petRows = petNames.map((name, index) => {
     age_months: age * 12 + ((index * 2) % 11),
     weight: Number((species === "犬" ? 5 + randomBetween(1, 22) : species === "猫" ? 2.4 + randomBetween(0, 5) : 1.5 + randomBetween(0, 2)).toFixed(1)),
     sterilized: index % 3 !== 0,
-    allergy_history: pickByIndex(["无", "青霉素慎用", "海鲜蛋白敏感", "疫苗后低热"], index + 3)
+    allergy_history: allergy === "无" ? [] : [allergy]
   };
 });
 
