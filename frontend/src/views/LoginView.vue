@@ -7,8 +7,9 @@
       <section class="column left-col">
         <div class="hero-panel glass-panel secondary-glass">
           <div class="hero-copy">
-            <div class="eyebrow">Baizhi Pet Hospital HIS</div>
-            <h1>温暖、专业、高效的宠物医疗协作平台</h1>
+            <div class="eyebrow">课程项目展示</div>
+            <h1>宠物医院信息系统</h1>
+            <div class="project-signature">管信2301 · 张默涵</div>
             <p>
               集成临床诊疗、实验室检验、影像管理及药房自动化。通过数字化流程减少人工误差，提升医疗质量，为每一份生命的托付提供最坚实的技术保障。
             </p>
@@ -627,7 +628,15 @@ onBeforeUnmount(() => {
   font-size: 30px;
   line-height: 1.35;
   font-weight: 600;
-  letter-spacing: -0.02em;
+  letter-spacing: 0;
+}
+
+.project-signature {
+  margin-top: 10px;
+  color: #0f766e;
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: 0;
 }
 
 .hero-copy p {

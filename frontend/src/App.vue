@@ -4,7 +4,10 @@
     <!-- 顶部导航栏 -->
     <el-header class="header">
       <div class="header-content">
-        <h1 class="logo">🐾 白之助宠物医院 IS</h1>
+        <h1 class="logo">
+          <span class="logo-main">🐾 宠物医院信息系统</span>
+          <span class="logo-meta">管信2301 张默涵</span>
+        </h1>
         <div class="header-center" v-if="authStore.isLoggedIn">
           <el-button text @click="router.push('/home')">工作台</el-button>
             <el-tooltip
@@ -365,12 +368,24 @@ onMounted(async () => {
 
 .logo {
   margin: 0;
-  font-size: 20px;
-  line-height: 1;
+  display: inline-flex;
+  flex-direction: column;
+  gap: 2px;
+  line-height: 1.08;
   font-weight: 800;
   color: #0f766e;
   letter-spacing: 0;
   white-space: nowrap;
+}
+
+.logo-main {
+  font-size: 18px;
+}
+
+.logo-meta {
+  font-size: 12px;
+  color: #64748b;
+  font-weight: 700;
 }
 
 .body {
@@ -512,9 +527,16 @@ onMounted(async () => {
   .logo {
     flex: 1 1 auto;
     min-width: 0;
-    font-size: 16px;
     overflow: hidden;
     text-overflow: ellipsis;
+  }
+
+  .logo-main {
+    font-size: 14px;
+  }
+
+  .logo-meta {
+    font-size: 10px;
   }
 
   .header-center {
